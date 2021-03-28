@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, TextInput, Alert, Pressable, Picker } from 'react-native';
 import api from '../services/api';
 import { useNavigation } from '@react-navigation/core';
 
-interface ILote {
+export interface ILote {
     id: number;
     perdas_no_transporte: number;
     data_recebimento: Date;
@@ -25,23 +25,65 @@ interface ILote {
     raca_id: number;
 }
 
-export default function LoteDetalhe() {
+export default function LoteDetalhe({route}) {
+    const hoje = new Date().toISOString().toString().substr(8, 2) + '/' + new Date().toISOString().toString().substr(5, 2) + '/' + new Date().toISOString().toString().substr(0, 4)
+    
     const [lote, setLote] = useState<ILote>();
     const [raca, setRaca] = useState(1);
     const [perdasTransporte, setPerdasTransporte] = useState('');
-    const [dataRecebimento, setDataRecebimento] = useState('');
-    const [previsaoEntrega, setPrevisaoEntrega] = useState('');
-    const [dataEntrega, setDataEntrega] = useState('');
+    const [dataRecebimento, setDataRecebimento] = useState(hoje);
+    const [previsaoEntrega, setPrevisaoEntrega] = useState(hoje);
+    const [dataEntrega, setDataEntrega] = useState(hoje);
     const [tamanhoPrevisto, setTamanhoPrevisto] = useState('');
     const [tamanhoEfetivo, setTamanhoEfetivo] = useState('');
     const [pesoEntrada, setPesoEntrada] = useState('');
-    const [racaoInicial, setRacaoInicial] = useState('');
-    const [racaoC1, setRacaoC1] = useState('');
-    const [racaoC2, setRacaoC2] = useState('');
-    const [racaoFinal, setRacaoFinal] = useState('');
-    const [inicioHrJejum, setInicioHrJejum] = useState('');
+    const [racaoInicial, setRacaoInicial] = useState(hoje);
+    const [racaoC1, setRacaoC1] = useState(hoje);
+    const [racaoC2, setRacaoC2] = useState(hoje);
+    const [racaoFinal, setRacaoFinal] = useState(hoje);
+    const [inicioHrJejum, setInicioHrJejum] = useState(hoje);
 
     const navigation = useNavigation();
+
+    const id = route.params.id;
+
+    useEffect(() => {
+        api.get(`lotes/${id}`).then(response => setLote(response.data));
+    }, [id]);
+
+    useEffect(() => {
+        if (lote) {
+            setRaca(lote.raca_id);
+            setPerdasTransporte(lote.perdas_no_transporte.toString());
+            setDataRecebimento(lote.data_recebimento.toString().substr(8, 2) + '/'
+            + lote.data_recebimento.toString().substr(5, 2) + '/'
+            + lote.data_recebimento.toString().substr(0, 4));
+            setPrevisaoEntrega(lote.previsao_entrega.toString().substr(8, 2) + '/'
+            + lote.previsao_entrega.toString().substr(5, 2) + '/'
+            + lote.previsao_entrega.toString().substr(0, 4));
+            setDataEntrega(lote.data_entrega.toString().substr(8, 2) + '/'
+            + lote.data_entrega.toString().substr(5, 2) + '/'
+            + lote.data_entrega.toString().substr(0, 4));
+            setTamanhoPrevisto(lote.tamanho_previsto.toString());
+            setTamanhoEfetivo(lote.tamanho_efetivo.toString());
+            setPesoEntrada(lote.peso_entrada.toString());
+            setRacaoInicial(lote.racao_inicial.toString().substr(8, 2) + '/'
+            + lote.racao_inicial.toString().substr(5, 2) + '/'
+            + lote.racao_inicial.toString().substr(0, 4));
+            setRacaoC1(lote.racao_c1.toString().substr(8, 2) + '/'
+            + lote.racao_c1.toString().substr(5, 2) + '/'
+            + lote.racao_c1.toString().substr(0, 4));
+            setRacaoC2(lote.racao_c2.toString().substr(8, 2) + '/'
+            + lote.racao_c2.toString().substr(5, 2) + '/'
+            + lote.racao_c2.toString().substr(0, 4));
+            setRacaoFinal(lote.racao_final.toString().substr(8, 2) + '/'
+            + lote.racao_final.toString().substr(5, 2) + '/'
+            + lote.racao_final.toString().substr(0, 4));
+            setInicioHrJejum(lote.inicio_horario_jejum.toString().substr(8, 2) + '/'
+            + lote.inicio_horario_jejum.toString().substr(5, 2) + '/'
+            + lote.inicio_horario_jejum.toString().substr(0, 4));
+        }
+    }, [lote]);
 
     async function handleCreateLote() {
         /*const data = new FormData();
@@ -63,10 +105,7 @@ export default function LoteDetalhe() {
         await api.post(`raca/${raca}/espaco/1/lotes`, data);
         return Alert.alert('Alterações salvas com sucesso');*/
 
-        //api.get('lotes/2').then(response => setLote(response.data));
-        //console.log(lote);
-
-        navigation.navigate('Lote');
+        navigation.navigate('Lotes');
     }
 
     return (
@@ -259,7 +298,8 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         backgroundColor: 'white',
         position: 'absolute',
-        bottom: 0, flex: 1,
+        bottom: 0, 
+        flex: 1,
         flexDirection: 'row',
     },
     bottomView: {

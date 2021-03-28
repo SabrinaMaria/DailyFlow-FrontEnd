@@ -16,8 +16,7 @@ export default function Lotes() {
     }, []);
 
     function handleLoteDetalhe(id: number) {
-        console.log('bbbbbbbb' + id);
-        navigation.navigate('Lote detalhe', { id })
+        navigation.navigate('Lote detalhe', { id });
     }
 
     return (
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     lastLote: {
-        marginBottom: 130,
+        marginBottom: 380,
         borderBottomWidth: 0.3,
         borderBottomColor: 'gray',
         margin: 20,
