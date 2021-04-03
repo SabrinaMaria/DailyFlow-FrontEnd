@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -23,7 +24,7 @@ export default function Lotes() {
         <View>
             <ScrollView>
                 {lotes?.map((lote, indexLote) => (
-                    <Pressable onPress={() => handleLoteDetalhe(lote.id)}>
+                    <Pressable onPress={() => handleLoteDetalhe(lote.id)} key={indexLote}>
                         <View style={indexLote === lotes.length - 1 ? styles.lastLote : styles.container}>
                             <View>
                                 <Text style={indexLote === 0 ? styles.firstLote : styles.allLotes}>
@@ -36,6 +37,8 @@ export default function Lotes() {
                             <View>
                                 <Text style={lote.data_entrega > new Date() ? styles.fechado : styles.aberto}>{lote.data_entrega > new Date() ? 'fechado' : 'aberto'}</Text>
                             </View>
+                            <Icon name="pencil" size={25} color="#999" />
+                            <Icon name="trash" size={25} color="#999" />
                         </View>
                     </Pressable>
                 ))}
