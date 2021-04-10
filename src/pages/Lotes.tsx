@@ -82,13 +82,13 @@ export default function Lotes() {
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => setModalVisible(!modalVisible)}
                             >
-                                <Text style={styles.textStyle}>Cancelar</Text>
+                                <Text style={styles.textStyleClose}>Cancelar</Text>
                             </Pressable>
                             <Pressable
                                 style={[styles.button, styles.buttonConfirm]}
                                 onPress={() => handleLoteExcluir(itemSelecionado)}
                             >
-                                <Text style={styles.textStyle}>Confirmar</Text>
+                                <Text style={styles.textStyleConfirm}>Confirmar</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     lastLote: {
-        marginBottom: 380,
+        marginBottom: 220,
         borderBottomWidth: 0.3,
         borderBottomColor: 'gray',
         margin: 20,
@@ -198,15 +198,21 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     buttonClose: {
-        backgroundColor: "#2196F3",
+        borderWidth: 1,
+        borderColor: "#6495ED",
     },
     buttonConfirm: {
-        backgroundColor: "red",
+        backgroundColor: "#6495ED",
         marginLeft: 5,
         marginRight: -55,
     },
-    textStyle: {
+    textStyleConfirm: {
         color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    textStyleClose: {
+        color: "#6495ED",
         fontWeight: "bold",
         textAlign: "center"
     },
