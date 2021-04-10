@@ -25,9 +25,9 @@ export interface ILote {
     raca_id: number;
 }
 
-export default function LoteDetalhe({route}) {
+export default function LoteDetalhe({ route }) {
     const hoje = new Date().toISOString().toString().substr(8, 2) + '/' + new Date().toISOString().toString().substr(5, 2) + '/' + new Date().toISOString().toString().substr(0, 4)
-    
+
     const [lote, setLote] = useState<ILote>();
     const [raca, setRaca] = useState(1);
     const [perdasTransporte, setPerdasTransporte] = useState('');
@@ -47,6 +47,14 @@ export default function LoteDetalhe({route}) {
 
     const id = route.params.id;
 
+    function formataDatasQuery(data: string) {
+        return data.substr(6, 4) + "-" + data.substr(3, 2) + "-" + data.substr(0, 2);
+    }
+
+    function formataDatasResponse(data: Date) {
+        return data.toString().substr(8, 2) + '/' + data.toString().substr(5, 2) + '/' + data.toString().substr(0, 4);
+    }
+
     useEffect(() => {
         api.get(`lotes/${id}`).then(response => setLote(response.data));
     }, [id]);
@@ -55,55 +63,27 @@ export default function LoteDetalhe({route}) {
         if (lote) {
             setRaca(lote.raca_id);
             setPerdasTransporte(lote.perdas_no_transporte.toString());
-            setDataRecebimento(lote.data_recebimento.toString().substr(8, 2) + '/'
-            + lote.data_recebimento.toString().substr(5, 2) + '/'
-            + lote.data_recebimento.toString().substr(0, 4));
-            setPrevisaoEntrega(lote.previsao_entrega.toString().substr(8, 2) + '/'
-            + lote.previsao_entrega.toString().substr(5, 2) + '/'
-            + lote.previsao_entrega.toString().substr(0, 4));
-            setDataEntrega(lote.data_entrega.toString().substr(8, 2) + '/'
-            + lote.data_entrega.toString().substr(5, 2) + '/'
-            + lote.data_entrega.toString().substr(0, 4));
+            setDataRecebimento(formataDatasResponse(lote.data_recebimento));
+            setPrevisaoEntrega(formataDatasResponse(lote.previsao_entrega));
+            setDataEntrega(formataDatasResponse(lote.data_entrega));
             setTamanhoPrevisto(lote.tamanho_previsto.toString());
             setTamanhoEfetivo(lote.tamanho_efetivo.toString());
             setPesoEntrada(lote.peso_entrada.toString());
-            setRacaoInicial(lote.racao_inicial.toString().substr(8, 2) + '/'
-            + lote.racao_inicial.toString().substr(5, 2) + '/'
-            + lote.racao_inicial.toString().substr(0, 4));
-            setRacaoC1(lote.racao_c1.toString().substr(8, 2) + '/'
-            + lote.racao_c1.toString().substr(5, 2) + '/'
-            + lote.racao_c1.toString().substr(0, 4));
-            setRacaoC2(lote.racao_c2.toString().substr(8, 2) + '/'
-            + lote.racao_c2.toString().substr(5, 2) + '/'
-            + lote.racao_c2.toString().substr(0, 4));
-            setRacaoFinal(lote.racao_final.toString().substr(8, 2) + '/'
-            + lote.racao_final.toString().substr(5, 2) + '/'
-            + lote.racao_final.toString().substr(0, 4));
-            setInicioHrJejum(lote.inicio_horario_jejum.toString().substr(8, 2) + '/'
-            + lote.inicio_horario_jejum.toString().substr(5, 2) + '/'
-            + lote.inicio_horario_jejum.toString().substr(0, 4));
+            setRacaoInicial(formataDatasResponse(lote.racao_inicial));
+            setRacaoC1(formataDatasResponse(lote.racao_c1));
+            setRacaoC2(formataDatasResponse(lote.racao_c2));
+            setRacaoFinal(formataDatasResponse(lote.racao_final));
+            setInicioHrJejum(formataDatasResponse(lote.inicio_horario_jejum));
         }
     }, [lote]);
 
     async function handleCreateLote() {
-        /*const data = new FormData();
-
-        data.append('perdas_no_transporte', perdasTransporte);
-        data.append('data_recebimento', dataRecebimento);
-        data.append('previsao_entrega', previsaoEntrega);
-        data.append('data_entrega', dataEntrega);
-        data.append('tamanho_previsto', tamanhoPrevisto);
-        data.append('tamanho_efetivo', tamanhoEfetivo);
-        data.append('peso_entrada', pesoEntrada);
-        data.append('racao_inicial', racaoInicial);
-        data.append('racao_c1', racaoC1);
-        data.append('racao_c2', racaoC2);
-        data.append('racao_final', racaoFinal);
-        data.append('inicio_horario_jejum', inicioHrJejum);
-
-        console.log(data);
-        await api.post(`raca/${raca}/espaco/1/lotes`, data);
-        return Alert.alert('Alterações salvas com sucesso');*/
+        if (id !== 0) {
+            await api.put(`/raca/${raca}/espaco/1/lotes/${id}?perdas_no_transporte=${perdasTransporte}&data_recebimento=${formataDatasQuery(dataRecebimento)}&previsao_entrega=${formataDatasQuery(previsaoEntrega)}&data_entrega=${formataDatasQuery(dataEntrega)}&tamanho_previsto=${tamanhoPrevisto}&tamanho_efetivo=${tamanhoEfetivo}&peso_entrada=${pesoEntrada}&racao_inicial=${formataDatasQuery(racaoInicial)}&racao_c1=${formataDatasQuery(racaoC1)}&racao_c2=${formataDatasQuery(racaoC2)}&racao_final=${formataDatasQuery(racaoFinal)}&inicio_horario_jejum=${formataDatasQuery(inicioHrJejum)}`);
+        } else {
+            await api.post(`raca/${raca}/espaco/1/lotes?perdas_no_transporte=${perdasTransporte}&data_recebimento=${formataDatasQuery(dataRecebimento)}&previsao_entrega=${formataDatasQuery(previsaoEntrega)}&data_entrega=${formataDatasQuery(dataEntrega)}&tamanho_previsto=${tamanhoPrevisto}&tamanho_efetivo=${tamanhoEfetivo}&peso_entrada=${pesoEntrada}&racao_inicial=${formataDatasQuery(racaoInicial)}&racao_c1=${formataDatasQuery(racaoC1)}&racao_c2=${formataDatasQuery(racaoC2)}&racao_final=${formataDatasQuery(racaoFinal)}&inicio_horario_jejum=${formataDatasQuery(inicioHrJejum)}`);
+        }
+        //return Alert.alert('Alterações salvas com sucesso');
 
         navigation.navigate('Lotes');
     }
@@ -298,7 +278,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         backgroundColor: 'white',
         position: 'absolute',
-        bottom: 0, 
+        bottom: 0,
         flex: 1,
         flexDirection: 'row',
     },
