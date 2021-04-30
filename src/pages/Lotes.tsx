@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { StyleSheet, View, Text, Pressable, Alert, Modal } from 'react-native';
+import { View, Text, Pressable, Alert, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import api from '../services/api';
 import { ILote } from './LoteDetalhe';
+import { LotesStyles } from '../styles/Lote.style';
 
 export default function Lotes() {
     const [lotes, setLotes] = useState<ILote[]>();
@@ -14,7 +15,11 @@ export default function Lotes() {
     const navigation = useNavigation();
 
     useEffect(() => {
+        try {
         api.get('lotes').then(response => setLotes(response.data));
+        } catch {
+            console.error("Não foi possível listar os lotes");
+        }
     }, []);
 
     function handleLoteDetalhe(id: number) {
@@ -22,7 +27,11 @@ export default function Lotes() {
     }
 
     function handleLoteExcluir(id: number) {
+        try {
         api.delete(`lotes/${id}`);
+        } catch {
+            console.error("Não foi possível excluir o lote");
+        }
         setModalVisible(!modalVisible);
     }
 
@@ -35,10 +44,10 @@ export default function Lotes() {
         <View>
             <ScrollView>
                 {lotes?.map((lote, indexLote) => (
-                    <View style={indexLote === lotes.length - 1 ? styles.lastLote : styles.container}>
+                    <View style={indexLote === lotes.length - 1 ? LotesStyles.lastLote : LotesStyles.container}>
                         <View>
                             <View>
-                                <Text style={indexLote === 0 ? styles.firstLote : styles.allLotes}>
+                                <Text style={indexLote === 0 ? LotesStyles.firstLote : LotesStyles.allLotes}>
                                     {lote?.data_recebimento.toString().substr(8, 2) + '/'
                                         + lote?.data_recebimento.toString().substr(5, 2) + '/'
                                         + lote?.data_recebimento.toString().substr(0, 4)
@@ -46,10 +55,10 @@ export default function Lotes() {
                                 </Text>
                             </View>
                             <View>
-                                <Text style={lote.data_entrega > new Date() ? styles.fechado : styles.aberto}>{lote.data_entrega > new Date() ? 'fechado' : 'aberto'}</Text>
+                                <Text style={lote.data_entrega > new Date() ? LotesStyles.fechado : LotesStyles.aberto}>{lote.data_entrega > new Date() ? 'fechado' : 'aberto'}</Text>
                             </View>
                         </View>
-                        <View style={indexLote === 0 ? styles.buttons1 : styles.buttons}>
+                        <View style={indexLote === 0 ? LotesStyles.buttons1 : LotesStyles.buttons}>
                             <Pressable onPress={() => handleLoteDetalhe(lote.id)} key={indexLote}>
                                 <Icon name="pencil" size={30} color="#999" />
                             </Pressable>
@@ -60,9 +69,9 @@ export default function Lotes() {
                     </View>
                 ))}
             </ScrollView>
-            <View style={styles.bottomView}>
-                <Pressable style={styles.pressable} onPress={() => handleLoteDetalhe(0)}>
-                    <Text style={styles.textButton}>  +</Text>
+            <View style={LotesStyles.bottomView}>
+                <Pressable style={LotesStyles.pressable} onPress={() => handleLoteDetalhe(0)}>
+                    <Text style={LotesStyles.textButton}>  +</Text>
                 </Pressable>
             </View>
             <Modal
@@ -74,21 +83,21 @@ export default function Lotes() {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Deseja excluir o item selecionado?</Text>
-                        <View style={styles.modalButtons}>
+                <View style={LotesStyles.centeredView}>
+                    <View style={LotesStyles.modalView}>
+                        <Text style={LotesStyles.modalText}>Deseja excluir o item selecionado?</Text>
+                        <View style={LotesStyles.modalButtons}>
                             <Pressable
-                                style={[styles.button, styles.buttonClose]}
+                                style={[LotesStyles.button, LotesStyles.buttonClose]}
                                 onPress={() => setModalVisible(!modalVisible)}
                             >
-                                <Text style={styles.textStyleClose}>Cancelar</Text>
+                                <Text style={LotesStyles.textStyleClose}>Cancelar</Text>
                             </Pressable>
                             <Pressable
-                                style={[styles.button, styles.buttonConfirm]}
+                                style={[LotesStyles.button, LotesStyles.buttonConfirm]}
                                 onPress={() => handleLoteExcluir(itemSelecionado)}
                             >
-                                <Text style={styles.textStyleConfirm}>Confirmar</Text>
+                                <Text style={LotesStyles.textStyleConfirm}>Confirmar</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -97,131 +106,3 @@ export default function Lotes() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        borderBottomWidth: 0.3,
-        borderBottomColor: 'gray',
-        margin: 20,
-        marginTop: 0,
-        paddingBottom: 20,
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    firstLote: {
-        paddingTop: 20,
-        color: 'black',
-        fontSize: 20,
-    },
-    allLotes: {
-        color: 'black',
-        fontSize: 20,
-    },
-    lastLote: {
-        marginBottom: 220,
-        borderBottomWidth: 0.3,
-        borderBottomColor: 'gray',
-        margin: 20,
-        marginTop: 0,
-        paddingBottom: 20,
-        flex: 1,
-        flexDirection: 'row',
-    },
-    bottomView: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: '#6495ED',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        marginLeft: 280,
-        bottom: 0
-    },
-    textButton: {
-        paddingRight: 9,
-        paddingBottom: 5,
-        textAlign: 'center',
-        fontSize: 40,
-        color: '#F0F8FF',
-        fontWeight: 'bold',
-    },
-    pressable: {
-        marginLeft: -10,
-    },
-    aberto: {
-        color: 'green',
-    },
-    fechado: {
-        color: 'red',
-    },
-    buttons: {
-        flex: 1,
-        flexDirection: 'row',
-        marginTop: 10,
-        marginLeft: 140,
-        marginRight: 7,
-        justifyContent: 'space-between',
-    },
-    buttons1: {
-        flex: 1,
-        flexDirection: 'row',
-        marginTop: 30,
-        marginLeft: 140,
-        marginRight: 7,
-        justifyContent: 'space-between',
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-    button: {
-        borderRadius: 20,
-        padding: 10,
-    },
-    buttonClose: {
-        borderWidth: 1,
-        borderColor: "#6495ED",
-    },
-    buttonConfirm: {
-        backgroundColor: "#6495ED",
-        marginLeft: 5,
-        marginRight: -55,
-    },
-    textStyleConfirm: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    textStyleClose: {
-        color: "#6495ED",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center"
-    },
-    modalButtons: {
-        flexDirection: 'row',
-        marginBottom: -10,
-    }
-});
