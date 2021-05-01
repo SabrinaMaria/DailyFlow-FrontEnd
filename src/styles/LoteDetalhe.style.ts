@@ -4,6 +4,7 @@ export const LoteDetalheStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
+        marginTop: 30,
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
     },

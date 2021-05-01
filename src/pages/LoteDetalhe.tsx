@@ -206,22 +206,7 @@ export default function LoteDetalhe({ route }) {
                         <Text style={LoteDetalheStyles.textButton2}>ADICIONAR ATUALIZAÇÃO</Text>
                     </Pressable>
                 </View>
-
-                {/*<View style={LoteDetalheStyles.middleView2}>
-                    <View style={LoteDetalheStyles.atualizacaoColumn}>
-                        <Text style={LoteDetalheStyles.textAtualizacao}>Data:</Text>
-                        <Text style={LoteDetalheStyles.textAtualizacao}>Peso:</Text>
-                        <Text style={LoteDetalheStyles.textAtualizacao}>Tamanho efetivo:</Text>
-                        <Text style={LoteDetalheStyles.textAtualizacao}>Mortalidade:</Text>
-                    </View>
-                    <View>
-                        <Text style={LoteDetalheStyles.textAtualizacao}>18/03/2021</Text>
-                        <Text style={LoteDetalheStyles.textAtualizacao}>20.560 (kg)</Text>
-                        <Text style={LoteDetalheStyles.textAtualizacao}>100</Text>
-                        <Text style={LoteDetalheStyles.textAtualizacao}>12</Text>
-                    </View>
-                </View>*/}
-
+                
                 <StatusBar style="auto" />
             </ScrollView>
 

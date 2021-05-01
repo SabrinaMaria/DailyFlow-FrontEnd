@@ -6,17 +6,23 @@ import { ScrollView } from 'react-native-gesture-handler';
 import api from '../services/api';
 import { ILote } from './LoteDetalhe';
 import { LotesStyles } from '../styles/Lote.style';
+import Header from '../components/Header';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { RootDrawerParamList } from '../routes';
 
 export default function Lotes() {
     const [lotes, setLotes] = useState<ILote[]>();
     const [modalVisible, setModalVisible] = useState(false);
     const [itemSelecionado, setItemSelecionado] = useState(0);
 
-    const navigation = useNavigation();
+    const navigation = useNavigation() as DrawerNavigationProp<
+    RootDrawerParamList,
+    'Lotes'
+  >;
 
     useEffect(() => {
         try {
-        api.get('lotes').then(response => setLotes(response.data));
+            api.get('lotes').then(response => setLotes(response.data));
         } catch {
             console.error("Não foi possível listar os lotes");
         }
@@ -28,7 +34,7 @@ export default function Lotes() {
 
     function handleLoteExcluir(id: number) {
         try {
-        api.delete(`lotes/${id}`);
+            api.delete(`lotes/${id}`);
         } catch {
             console.error("Não foi possível excluir o lote");
         }
@@ -42,6 +48,7 @@ export default function Lotes() {
 
     return (
         <View>
+            <Header title="Lotes" onPress={() => navigation.openDrawer()} />
             <ScrollView>
                 {lotes?.map((lote, indexLote) => (
                     <View style={indexLote === lotes.length - 1 ? LotesStyles.lastLote : LotesStyles.container}>
