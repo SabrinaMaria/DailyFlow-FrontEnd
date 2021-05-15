@@ -4,11 +4,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Pressable, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import api from '../services/api';
-import { ILote } from './LoteDetalhe';
 import { LotesStyles } from '../styles/Lote.style';
 import Header from '../components/Header';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../routes';
+import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
+import { ILote, LoteService } from '../services/LoteService';
 
 export default function Lotes() {
     const [lotes, setLotes] = useState<ILote[]>();
@@ -21,11 +22,11 @@ export default function Lotes() {
     >;
 
     useEffect(() => {
-        try {
-            api.get('lotes').then(response => setLotes(response.data));
-        } catch {
-            console.error("Não foi possível listar os lotes");
-        }
+        LoteService.getLotes().then((data) => {
+            if (data) {
+                setLotes(data);
+            }
+        })
     }, []);
 
     function handleLoteDetalhe(id: number) {
@@ -33,11 +34,7 @@ export default function Lotes() {
     }
 
     function handleLoteExcluir(id: number) {
-        try {
-            api.delete(`lotes/${id}`);
-        } catch {
-            console.error("Não foi possível excluir o lote");
-        }
+        LoteService.deleteLote(id);
         setModalVisible(!modalVisible);
     }
 
@@ -76,9 +73,9 @@ export default function Lotes() {
                     </View>
                 ))}
             </ScrollView>
-            <View style={LotesStyles.bottomView}>
-                <Pressable style={LotesStyles.pressable} onPress={() => handleLoteDetalhe(0)}>
-                    <Text style={LotesStyles.textButton}>  +</Text>
+            <View style={FluxoDetalheStyles.bottomView}>
+                <Pressable style={FluxoDetalheStyles.pressable} onPress={() => handleLoteDetalhe(0)}>
+                    <Text style={FluxoDetalheStyles.textButton}>NOVO REGISTRO</Text>
                 </Pressable>
             </View>
             <Modal

@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Text, Picker, TextInput, View, Pressable } from 'react-native';
 import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
 import api from '../services/api';
+import { FluxoDeCaixaService } from '../services/FluxoDeCaixaService';
 
 export default function FluxoDeCaixaDetalhe({ route }) {
     const hoje = new Date().toISOString().toString().substr(8, 2) + '/' + new Date().toISOString().toString().substr(5, 2) + '/' + new Date().toISOString().toString().substr(0, 4)
@@ -29,11 +30,7 @@ export default function FluxoDeCaixaDetalhe({ route }) {
                 console.error("Não foi possível atualizar o registro");
             }
         } else {
-            try {
-                await api.post(`fluxo_caixa/propriedade/${entidadePai == 1 ? 1 : 0}/espaco/${entidadePai == 2 ? 1 : 0}?receita=${tipo == 1 ? true : false}&valor=${valor}&descricao=${descricao}&data=${formataDatasQuery(data)}`);
-            } catch {
-                console.error("Não foi possível cadastrar o registro");
-            }
+            FluxoDeCaixaService.createRegistroFluxo(entidadePai, tipo, valor, descricao, data);
         }
 
         navigation.navigate('Fluxos');

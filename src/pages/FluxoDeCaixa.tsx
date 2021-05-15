@@ -7,18 +7,8 @@ import { FluxoStyles } from '../styles/FluxoDeCaixa.style';
 import Header from '../components/HeaderFluxoDeCaixa';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../routes';
-
-export interface IFluxo {
-    id: number;
-    receita: boolean;
-    data: string;
-    valor: number;
-    descricao: string;
-    createdAt: Date;
-    updatedAt: Date;
-    espaco_id: number;
-    propriedade_id: number;
-}
+import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
+import { FluxoDeCaixaService } from '../services/FluxoDeCaixaService';
 
 export default function Lotes() {
     const [fluxos, setFluxos] = useState<IFluxo[]>();
@@ -29,11 +19,11 @@ export default function Lotes() {
     >;
 
     useEffect(() => {
-        try {
-            api.get('fluxos').then(response => setFluxos(response.data));
-        } catch {
-            console.error("Não foi possível listar os lotes");
-        }
+        FluxoDeCaixaService.getRegistrosFluxo().then((data) => {
+            if (data) {
+                setFluxos(data);
+            }
+        })
     }, []);
 
     function numberToReal(valor: number) {
@@ -138,9 +128,9 @@ export default function Lotes() {
                     </View>
                 ))}
             </ScrollView>
-            <View style={FluxoStyles.bottomView}>
-                <Pressable style={FluxoStyles.pressable} onPress={() => handleFluxoDetalhe(0)}>
-                    <Text style={FluxoStyles.textButton}>  +</Text>
+            <View style={FluxoDetalheStyles.bottomView}>
+                <Pressable style={FluxoDetalheStyles.pressable} onPress={() => handleFluxoDetalhe(0)}>
+                    <Text style={FluxoDetalheStyles.textButton}>NOVO REGISTRO</Text>
                 </Pressable>
             </View>
         </View>

@@ -5,26 +5,7 @@ import { Text, View, ScrollView, TextInput, Alert, Pressable, Picker } from 'rea
 import api from '../services/api';
 import { useNavigation } from '@react-navigation/core';
 import { LoteDetalheStyles } from '../styles/LoteDetalhe.style';
-
-export interface ILote {
-    id: number;
-    perdas_no_transporte: number;
-    data_recebimento: Date;
-    previsao_entrega: Date;
-    data_entrega: Date;
-    tamanho_previsto: number;
-    tamanho_efetivo: number;
-    peso_entrada: number;
-    racao_inicial: Date;
-    racao_c1: Date;
-    racao_c2: Date;
-    racao_final: Date;
-    inicio_horario_jejum: Date;
-    createdAt: Date;
-    updatedAt: Date;
-    espaco_id: number;
-    raca_id: number;
-}
+import { ILote, LoteService } from '../services/LoteService';
 
 export default function LoteDetalhe({ route }) {
     const hoje = new Date().toISOString().toString().substr(8, 2) + '/' + new Date().toISOString().toString().substr(5, 2) + '/' + new Date().toISOString().toString().substr(0, 4)
@@ -48,19 +29,31 @@ export default function LoteDetalhe({ route }) {
 
     const id = route.params.id;
 
-    function formataDatasQuery(data: string) {
-        return data.substr(6, 4) + "-" + data.substr(3, 2) + "-" + data.substr(0, 2);
-    }
-
     function formataDatasResponse(data: Date) {
         return data.toString().substr(8, 2) + '/' + data.toString().substr(5, 2) + '/' + data.toString().substr(0, 4);
     }
 
     useEffect(() => {
-        try {
-            api.get(`lotes/${id}`).then(response => setLote(response.data));
-        } catch {
-            console.error("Lote não encontrado");
+        if (id !== 0) {
+            LoteService.getLoteById(id).then((data) => {
+                if (data) {
+                    setLote(data);
+                }
+            })
+        } else {
+            setRaca(1);
+            setPerdasTransporte("");
+            setDataRecebimento(hoje);
+            setPrevisaoEntrega(hoje);
+            setDataEntrega(hoje);
+            setTamanhoPrevisto("");
+            setTamanhoEfetivo("");
+            setPesoEntrada("");
+            setRacaoInicial(hoje);
+            setRacaoC1(hoje);
+            setRacaoC2(hoje);
+            setRacaoFinal(hoje);
+            setInicioHrJejum(hoje);
         }
     }, [id]);
 
@@ -84,17 +77,9 @@ export default function LoteDetalhe({ route }) {
 
     async function handleCreateLote() {
         if (id !== 0) {
-            try {
-                await api.put(`/raca/${raca}/espaco/1/lotes/${id}?perdas_no_transporte=${perdasTransporte}&data_recebimento=${formataDatasQuery(dataRecebimento)}&previsao_entrega=${formataDatasQuery(previsaoEntrega)}&data_entrega=${formataDatasQuery(dataEntrega)}&tamanho_previsto=${tamanhoPrevisto}&tamanho_efetivo=${tamanhoEfetivo}&peso_entrada=${pesoEntrada}&racao_inicial=${formataDatasQuery(racaoInicial)}&racao_c1=${formataDatasQuery(racaoC1)}&racao_c2=${formataDatasQuery(racaoC2)}&racao_final=${formataDatasQuery(racaoFinal)}&inicio_horario_jejum=${formataDatasQuery(inicioHrJejum)}`);
-            } catch {
-                console.error("Não foi possível atualizar o lote");
-            }
+            LoteService.updateLote(id, raca, perdasTransporte, dataRecebimento, previsaoEntrega, dataEntrega, tamanhoPrevisto, tamanhoEfetivo, pesoEntrada, racaoInicial, racaoC1, racaoC2, racaoFinal, inicioHrJejum);
         } else {
-            try {
-                await api.post(`raca/${raca}/espaco/1/lotes?perdas_no_transporte=${perdasTransporte}&data_recebimento=${formataDatasQuery(dataRecebimento)}&previsao_entrega=${formataDatasQuery(previsaoEntrega)}&data_entrega=${formataDatasQuery(dataEntrega)}&tamanho_previsto=${tamanhoPrevisto}&tamanho_efetivo=${tamanhoEfetivo}&peso_entrada=${pesoEntrada}&racao_inicial=${formataDatasQuery(racaoInicial)}&racao_c1=${formataDatasQuery(racaoC1)}&racao_c2=${formataDatasQuery(racaoC2)}&racao_final=${formataDatasQuery(racaoFinal)}&inicio_horario_jejum=${formataDatasQuery(inicioHrJejum)}`);
-            } catch {
-                console.error("Não foi possível cadastrar o lote");
-            }
+            LoteService.createLote(raca, perdasTransporte, dataRecebimento, previsaoEntrega, dataEntrega, tamanhoPrevisto, tamanhoEfetivo, pesoEntrada, racaoInicial, racaoC1, racaoC2, racaoFinal, inicioHrJejum);
         }
 
         navigation.navigate('Lotes');
@@ -206,7 +191,7 @@ export default function LoteDetalhe({ route }) {
                         <Text style={LoteDetalheStyles.textButton2}>ADICIONAR ATUALIZAÇÃO</Text>
                     </Pressable>
                 </View>
-                
+
                 <StatusBar style="auto" />
             </ScrollView>
 
