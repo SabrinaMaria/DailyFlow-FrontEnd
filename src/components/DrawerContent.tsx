@@ -23,7 +23,7 @@ const DrawerContent = (
     },
     {
       label: 'Fluxo de Caixa',
-      route: 'Fluxo',
+      route: 'Fluxos',
       icon: 'cash',
     },
   ];

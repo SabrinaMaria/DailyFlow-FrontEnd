@@ -25,7 +25,7 @@ export default function Lotes() {
 
     const navigation = useNavigation() as DrawerNavigationProp<
         RootDrawerParamList,
-        'Fluxo'
+        'Fluxos'
     >;
 
     useEffect(() => {
@@ -81,13 +81,8 @@ export default function Lotes() {
     }
 
     function handleFluxoDetalhe(id: number) {
-        /* navigation.navigate('Lote detalhe', { id }); */
+        navigation.navigate('Fluxo detalhe', { id });
     }
-
-    /* function onPressModal(item: number) {
-        setModalVisible(!modalVisible);
-        setItemSelecionado(item);
-    } */
 
     return (
         <View>

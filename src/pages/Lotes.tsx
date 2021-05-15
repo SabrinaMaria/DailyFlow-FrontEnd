@@ -16,9 +16,9 @@ export default function Lotes() {
     const [itemSelecionado, setItemSelecionado] = useState(0);
 
     const navigation = useNavigation() as DrawerNavigationProp<
-    RootDrawerParamList,
-    'Lotes'
-  >;
+        RootDrawerParamList,
+        'Lotes'
+    >;
 
     useEffect(() => {
         try {

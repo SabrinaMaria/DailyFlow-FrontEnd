@@ -21,7 +21,6 @@ export const LotesStyles = StyleSheet.create({
         fontSize: 20,
     },
     lastLote: {
-        marginBottom: 240,
         borderBottomWidth: 0.3,
         borderBottomColor: 'gray',
         margin: 20,

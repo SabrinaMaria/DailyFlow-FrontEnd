@@ -21,7 +21,6 @@ export const FluxoStyles = StyleSheet.create({
         fontSize: 20,
     },
     lastFulxo: {
-        marginBottom: 210,
         borderBottomWidth: 0.3,
         borderBottomColor: 'gray',
         margin: 20,
