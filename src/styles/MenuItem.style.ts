@@ -9,7 +9,7 @@ export const MenuStyles = StyleSheet.create({
     marginTop: 60,
   },
   sair: {
-    marginTop: 470,
+    marginTop: 410,
   },
   icon: {
     marginRight: 20,

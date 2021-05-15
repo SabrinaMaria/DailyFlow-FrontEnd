@@ -21,6 +21,11 @@ const DrawerContent = (
       route: 'Lotes',
       icon: 'information',
     },
+    {
+      label: 'Fluxo de Caixa',
+      route: 'Fluxo',
+      icon: 'cash',
+    },
   ];
 
   return (

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { View, Text, Pressable, Alert, Modal } from 'react-native';
+import { View, Text, Pressable, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import api from '../services/api';
 import { ILote } from './LoteDetalhe';
@@ -85,10 +85,7 @@ export default function Lotes() {
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
-                }}
+                onRequestClose={() => setModalVisible(!modalVisible)}
             >
                 <View style={LotesStyles.centeredView}>
                     <View style={LotesStyles.modalView}>
