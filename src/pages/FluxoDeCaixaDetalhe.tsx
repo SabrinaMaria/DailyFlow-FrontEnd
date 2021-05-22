@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Text, Picker, TextInput, View, Pressable, Modal } from 'react-native';
 import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
-import { FluxoDeCaixaService, IFluxo } from '../services/FluxoDeCaixaService';
+import { FluxoDeCaixaService } from '../services/FluxoDeCaixaService';
 
 export default function FluxoDeCaixaDetalhe({ route }) {
     const hoje = new Date().toISOString().toString().substr(8, 2) + '/' + new Date().toISOString().toString().substr(5, 2) + '/' + new Date().toISOString().toString().substr(0, 4)

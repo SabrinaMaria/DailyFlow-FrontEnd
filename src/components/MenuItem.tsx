@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { Container, Icon, MenuStyles } from '../styles/MenuItem.style';
 import { Title } from '../styles/Header.style';

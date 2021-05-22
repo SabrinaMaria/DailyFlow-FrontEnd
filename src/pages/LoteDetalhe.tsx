@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, ScrollView, TextInput, Alert, Pressable, Picker } from 'react-native';
-import api from '../services/api';
 import { useNavigation } from '@react-navigation/core';
 import { LoteDetalheStyles } from '../styles/LoteDetalhe.style';
-import { ILote, LoteService } from '../services/LoteService';
+import { LoteService } from '../services/LoteService';
 
 export default function LoteDetalhe({ route }) {
     const hoje = new Date().toISOString().toString().substr(8, 2) + '/' + new Date().toISOString().toString().substr(5, 2) + '/' + new Date().toISOString().toString().substr(0, 4)
 
-    const [lote, setLote] = useState<ILote>();
     const [raca, setRaca] = useState(1);
     const [perdasTransporte, setPerdasTransporte] = useState('');
     const [dataRecebimento, setDataRecebimento] = useState(hoje);

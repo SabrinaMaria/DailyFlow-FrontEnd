@@ -1,13 +1,13 @@
-import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable, Alert, Modal, Picker } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
+import { View, Text, Pressable, Picker } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { FluxoStyles } from '../styles/FluxoDeCaixa.style';
-import Header from '../components/HeaderFluxoDeCaixa';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../routes';
 import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
 import { FluxoDeCaixaService, IFluxo } from '../services/FluxoDeCaixaService';
+import Header from '../components/HeaderFluxoDeCaixa';
 
 export default function Lotes() {
     const [fluxos, setFluxos] = useState<IFluxo[]>();

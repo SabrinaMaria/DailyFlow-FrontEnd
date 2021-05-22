@@ -1,15 +1,14 @@
-import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/core';
 import { View, Text, Pressable, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import api from '../services/api';
 import { LotesStyles } from '../styles/Lote.style';
-import Header from '../components/Header';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../routes';
 import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
 import { ILote, LoteService } from '../services/LoteService';
+import Header from '../components/Header';
 
 export default function Lotes() {
     const [lotes, setLotes] = useState<ILote[]>();
