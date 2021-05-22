@@ -43,6 +43,8 @@ export const LoteDetalheStyles = StyleSheet.create({
         height: 50,
         marginBottom: /*150*/60,
         backgroundColor: '#F0F8FF',
+        borderWidth: 0.3,
+        borderColor: '#6495ED',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',

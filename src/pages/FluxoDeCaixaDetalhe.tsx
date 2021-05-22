@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Text, Picker, TextInput, View, Pressable } from 'react-native';
+import { Text, Picker, TextInput, View, Pressable, Modal } from 'react-native';
 import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
 import { FluxoDeCaixaService, IFluxo } from '../services/FluxoDeCaixaService';
 
@@ -12,6 +12,7 @@ export default function FluxoDeCaixaDetalhe({ route }) {
     const [data, setData] = useState(hoje);
     const [valor, setValor] = useState('');
     const [descricao, setDescricao] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
     const navigation = useNavigation();
 
@@ -52,6 +53,12 @@ export default function FluxoDeCaixaDetalhe({ route }) {
             FluxoDeCaixaService.createRegistroFluxo(entidadePai, tipo, valor, descricao, data);
         }
 
+        navigation.navigate('Fluxos');
+    }
+
+    function handleFluxoExcluir() {
+        FluxoDeCaixaService.deleteRegistroFluxo(id);
+        setModalVisible(!modalVisible);
         navigation.navigate('Fluxos');
     }
 
@@ -113,12 +120,48 @@ export default function FluxoDeCaixaDetalhe({ route }) {
                         />
                     </View>
                 </View>
+
+                {id !== 0 &&
+                    <View style={FluxoDetalheStyles.middleView}>
+                        <Pressable style={FluxoDetalheStyles.pressable} onPress={() => setModalVisible(!modalVisible)}>
+                            <Text style={FluxoDetalheStyles.textButton2}>EXCLUIR</Text>
+                        </Pressable>
+                    </View>
+                }
+
                 <View style={FluxoDetalheStyles.bottomView}>
                     <Pressable style={FluxoDetalheStyles.pressable} onPress={() => handleCreateFluxo()}>
                         <Text style={FluxoDetalheStyles.textButton}>SALVAR</Text>
                     </Pressable>
                 </View>
             </View>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(!modalVisible)}
+            >
+                <View style={FluxoDetalheStyles.centeredView}>
+                    <View style={FluxoDetalheStyles.modalView}>
+                        <Text style={FluxoDetalheStyles.modalText}>Deseja excluir o item selecionado?</Text>
+                        <View style={FluxoDetalheStyles.modalButtons}>
+                            <Pressable
+                                style={[FluxoDetalheStyles.button, FluxoDetalheStyles.buttonClose]}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text style={FluxoDetalheStyles.textStyleClose}>Cancelar</Text>
+                            </Pressable>
+                            <Pressable
+                                style={[FluxoDetalheStyles.button, FluxoDetalheStyles.buttonConfirm]}
+                                onPress={() => handleFluxoExcluir()}
+                            >
+                                <Text style={FluxoDetalheStyles.textStyleConfirm}>Confirmar</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }

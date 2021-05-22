@@ -35,11 +35,7 @@ export default function LoteDetalhe({ route }) {
 
     useEffect(() => {
         if (id !== 0) {
-            LoteService.getLoteById(id).then((data) => {
-                if (data) {
-                    setLote(data);
-                }
-            })
+            fetchLote();
         } else {
             setRaca(1);
             setPerdasTransporte("");
@@ -57,7 +53,9 @@ export default function LoteDetalhe({ route }) {
         }
     }, [id]);
 
-    useEffect(() => {
+    async function fetchLote() {
+        const lote = await LoteService.getLoteById(id);
+
         if (lote) {
             setRaca(lote.raca_id);
             setPerdasTransporte(lote.perdas_no_transporte.toString());
@@ -73,7 +71,7 @@ export default function LoteDetalhe({ route }) {
             setRacaoFinal(formataDatasResponse(lote.racao_final));
             setInicioHrJejum(formataDatasResponse(lote.inicio_horario_jejum));
         }
-    }, [lote]);
+    }
 
     async function handleCreateLote() {
         if (id !== 0) {

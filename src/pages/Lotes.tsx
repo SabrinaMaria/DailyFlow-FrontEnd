@@ -33,8 +33,8 @@ export default function Lotes() {
         navigation.navigate('Lote detalhe', { id });
     }
 
-    function handleLoteExcluir(id: number) {
-        LoteService.deleteLote(id);
+    function handleLoteExcluir() {
+        LoteService.deleteLote(itemSelecionado);
         setModalVisible(!modalVisible);
     }
 
@@ -96,7 +96,7 @@ export default function Lotes() {
                             </Pressable>
                             <Pressable
                                 style={[LotesStyles.button, LotesStyles.buttonConfirm]}
-                                onPress={() => handleLoteExcluir(itemSelecionado)}
+                                onPress={() => handleLoteExcluir()}
                             >
                                 <Text style={LotesStyles.textStyleConfirm}>Confirmar</Text>
                             </Pressable>
