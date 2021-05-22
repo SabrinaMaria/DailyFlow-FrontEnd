@@ -2,13 +2,12 @@ import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, Alert, Modal, Picker } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import api from '../services/api';
 import { FluxoStyles } from '../styles/FluxoDeCaixa.style';
 import Header from '../components/HeaderFluxoDeCaixa';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../routes';
 import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
-import { FluxoDeCaixaService } from '../services/FluxoDeCaixaService';
+import { FluxoDeCaixaService, IFluxo } from '../services/FluxoDeCaixaService';
 
 export default function Lotes() {
     const [fluxos, setFluxos] = useState<IFluxo[]>();
@@ -107,25 +106,27 @@ export default function Lotes() {
                     </View>
                 </View>
                 {fluxos?.map((fluxo, indexLote) => (
-                    <View style={indexLote === fluxos.length - 1 ? FluxoStyles.lastFulxo : FluxoStyles.container}>
-                        <View>
+                    <Pressable onPress={() => handleFluxoDetalhe(fluxo.id)}>
+                        <View style={indexLote === fluxos.length - 1 ? FluxoStyles.lastFulxo : FluxoStyles.container}>
                             <View>
-                                <Text style={indexLote === 0 ? FluxoStyles.firstFluxo : FluxoStyles.allFluxos}>
-                                    {fluxo?.data.toString().substr(8, 2) + '/'
-                                        + fluxo?.data.toString().substr(5, 2) + '/'
-                                        + fluxo?.data.toString().substr(0, 4)
-                                    }
-                                </Text>
+                                <View>
+                                    <Text style={indexLote === 0 ? FluxoStyles.firstFluxo : FluxoStyles.allFluxos}>
+                                        {fluxo?.data.toString().substr(8, 2) + '/'
+                                            + fluxo?.data.toString().substr(5, 2) + '/'
+                                            + fluxo?.data.toString().substr(0, 4)
+                                        }
+                                    </Text>
+                                </View>
+                                <View>
+                                    <Text style={fluxo.receita ? FluxoStyles.receita : FluxoStyles.despesa}>{fluxo.receita ? 'receita' : 'despesa'}</Text>
+                                </View>
                             </View>
-                            <View>
-                                <Text style={fluxo.receita ? FluxoStyles.receita : FluxoStyles.despesa}>{fluxo.receita ? 'receita' : 'despesa'}</Text>
+                            <View style={indexLote === 0 ? FluxoStyles.descEValor : undefined}>
+                                <Text style={FluxoStyles.descText}>{fluxo.descricao}</Text>
+                                <Text style={fluxo.receita ? FluxoStyles.valorTextR : FluxoStyles.valorTextD}>{numberToReal(fluxo.valor)}</Text>
                             </View>
                         </View>
-                        <View style={indexLote === 0 ? FluxoStyles.descEValor : undefined}>
-                            <Text style={FluxoStyles.descText}>{fluxo.descricao}</Text>
-                            <Text style={fluxo.receita ? FluxoStyles.valorTextR : FluxoStyles.valorTextD}>{numberToReal(fluxo.valor)}</Text>
-                        </View>
-                    </View>
+                    </Pressable>
                 ))}
             </ScrollView>
             <View style={FluxoDetalheStyles.bottomView}>

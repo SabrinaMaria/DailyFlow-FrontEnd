@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Text, Picker, TextInput, View, Pressable } from 'react-native';
 import { FluxoDetalheStyles } from '../styles/FluxoDetalhe.style';
-import api from '../services/api';
-import { FluxoDeCaixaService } from '../services/FluxoDeCaixaService';
+import { FluxoDeCaixaService, IFluxo } from '../services/FluxoDeCaixaService';
 
 export default function FluxoDeCaixaDetalhe({ route }) {
     const hoje = new Date().toISOString().toString().substr(8, 2) + '/' + new Date().toISOString().toString().substr(5, 2) + '/' + new Date().toISOString().toString().substr(0, 4)
@@ -18,17 +17,37 @@ export default function FluxoDeCaixaDetalhe({ route }) {
 
     const id = route.params.id;
 
-    function formataDatasQuery(data: string) {
-        return data.substr(6, 4) + "-" + data.substr(3, 2) + "-" + data.substr(0, 2);
+    function formataDatasResponse(data: string) {
+        return data.substr(8, 2) + '/' + data.toString().substr(5, 2) + '/' + data.toString().substr(0, 4);
+    }
+
+    useEffect(() => {
+        if (id !== 0) {
+            fetchFluxo();
+        } else {
+            setTipo(1);
+            setEntidadePai(1);
+            setData(hoje);
+            setValor("");
+            setDescricao("");
+        }
+    }, [id]);
+
+    async function fetchFluxo() {
+        const fluxo = await FluxoDeCaixaService.getRegistroById(id);
+
+        if (fluxo) {
+            setTipo(fluxo.receita ? 1 : 2);
+            setEntidadePai(fluxo.espaco_id != 0 ? 2 : 1);
+            setData(formataDatasResponse(fluxo.data));
+            setValor(fluxo.valor.toString());
+            setDescricao(fluxo.descricao);
+        }
     }
 
     async function handleCreateFluxo() {
         if (id !== 0) {
-            try {
-                //await api.put(`/raca/${raca}/espaco/1/lotes/${id}?perdas_no_transporte=${perdasTransporte}&data_recebimento=${formataDatasQuery(dataRecebimento)}&previsao_entrega=${formataDatasQuery(previsaoEntrega)}&data_entrega=${formataDatasQuery(dataEntrega)}&tamanho_previsto=${tamanhoPrevisto}&tamanho_efetivo=${tamanhoEfetivo}&peso_entrada=${pesoEntrada}&racao_inicial=${formataDatasQuery(racaoInicial)}&racao_c1=${formataDatasQuery(racaoC1)}&racao_c2=${formataDatasQuery(racaoC2)}&racao_final=${formataDatasQuery(racaoFinal)}&inicio_horario_jejum=${formataDatasQuery(inicioHrJejum)}`);
-            } catch {
-                console.error("Não foi possível atualizar o registro");
-            }
+            FluxoDeCaixaService.updateRegistroFluxo(id, entidadePai, tipo, valor, descricao, data);
         } else {
             FluxoDeCaixaService.createRegistroFluxo(entidadePai, tipo, valor, descricao, data);
         }
@@ -88,8 +107,7 @@ export default function FluxoDeCaixaDetalhe({ route }) {
                         <Text>Valor</Text>
                         <TextInput
                             style={FluxoDetalheStyles.input}
-                            placeholder="Digite aqui"
-                            keyboardType="decimal-pad"
+                            placeholder="0,00"
                             value={valor}
                             onChangeText={setValor}
                         />
